@@ -4,32 +4,38 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 def preprocess_data(file_path):
 
-    # Load dataset
     df = pd.read_csv(file_path)
 
 
-    # Remove duplicates
+    # remove duplicates
     df = df.drop_duplicates()
 
 
-    # Remove missing values
+    # remove missing values
     df = df.dropna()
 
 
-    # Remove unwanted columns
-    remove_columns = [
+
+    # remove unwanted columns
+
+    remove_cols = [
         "Employee ID",
         "Date of Joining"
     ]
 
 
-    for col in remove_columns:
+    for col in remove_cols:
         if col in df.columns:
-            df.drop(col, axis=1, inplace=True)
+            df.drop(
+                col,
+                axis=1,
+                inplace=True
+            )
 
 
 
     # Encode categorical columns
+
     encoder = LabelEncoder()
 
 
@@ -38,7 +44,7 @@ def preprocess_data(file_path):
 
 
 
-    # Split feature and target
+    # Features and target
 
     X = df.drop(
         "Burn Rate",
@@ -50,13 +56,14 @@ def preprocess_data(file_path):
 
 
 
-    # Scaling
+    # Scaling with column names
 
     scaler = StandardScaler()
 
 
-    X_scaled = scaler.fit_transform(
-        X
+    X_scaled = pd.DataFrame(
+        scaler.fit_transform(X),
+        columns=X.columns
     )
 
 

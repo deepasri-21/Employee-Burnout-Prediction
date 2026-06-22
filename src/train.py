@@ -18,20 +18,26 @@ from sklearn.metrics import (
 
 import pickle
 import numpy as np
+import os
 
 
 
-# Load data
+# create model folder
 
-X, y, scaler = preprocess_data(
+os.makedirs(
+    "model",
+    exist_ok=True
+)
+
+
+
+X,y,scaler = preprocess_data(
     "dataset/employee_burnout.csv"
 )
 
 
 
-# Split data
-
-X_train, X_test, y_train, y_test = train_test_split(
+X_train,X_test,y_train,y_test=train_test_split(
     X,
     y,
     test_size=0.2,
@@ -40,9 +46,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 
 
-# Models
-
-models = {
+models={
 
 "Linear Regression":
 LinearRegression(),
@@ -64,8 +68,8 @@ RandomForestRegressor(
 
 
 
-best_model = None
-best_score = 0
+best_model=None
+best_score=0
 
 
 
@@ -78,12 +82,12 @@ for name,model in models.items():
     )
 
 
-    pred = model.predict(
+    pred=model.predict(
         X_test
     )
 
 
-    score = r2_score(
+    score=r2_score(
         y_test,
         pred
     )
@@ -97,7 +101,6 @@ for name,model in models.items():
         score
     )
 
-
     print(
         "MAE:",
         mean_absolute_error(
@@ -105,7 +108,6 @@ for name,model in models.items():
             pred
         )
     )
-
 
     print(
         "RMSE:",
@@ -121,13 +123,10 @@ for name,model in models.items():
 
     if score > best_score:
 
-        best_score = score
-        best_model = model
+        best_score=score
+        best_model=model
 
 
-
-
-# Save best model
 
 
 pickle.dump(
@@ -151,10 +150,10 @@ pickle.dump(
 
 
 print(
-    "Best Model Saved"
+    "Model Saved Successfully"
 )
 
 print(
-    "Best Accuracy:",
+    "Best Score:",
     best_score
 )

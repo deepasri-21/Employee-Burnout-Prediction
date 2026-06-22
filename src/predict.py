@@ -1,9 +1,6 @@
 import pickle
-import numpy as np
+import pandas as pd
 
-
-
-# Load model
 
 model = pickle.load(
     open(
@@ -11,7 +8,6 @@ model = pickle.load(
         "rb"
     )
 )
-
 
 
 scaler = pickle.load(
@@ -22,44 +18,36 @@ scaler = pickle.load(
 )
 
 
+employee = pd.DataFrame([{
+
+"Gender":1,
+"Company Type":0,
+"WFH Setup Available":1,
+"Designation":2,
+"Resource Allocation":3,
+"Mental Fatigue Score":6
+
+}])
 
 
-# New employee data
-
-
-employee = np.array([
-
-[
-25,
-1,
-2,
-3,
-8,
-6
-]
-
-])
-
-
-
-# Scaling
-
-employee = scaler.transform(
+employee_scaled = scaler.transform(
     employee
 )
 
 
-
-# Prediction
-
-result = model.predict(
-    employee
+# Fix warning
+employee_scaled = pd.DataFrame(
+    employee_scaled,
+    columns=employee.columns
 )
 
 
+prediction = model.predict(
+    employee_scaled
+)
 
-rate = result[0]
 
+rate = prediction[0]
 
 
 print(
@@ -68,23 +56,11 @@ print(
 )
 
 
+if rate >=0.6:
+    print("High Burnout Risk")
 
-if rate >= 0.6:
-
-    print(
-        "High Burnout Risk"
-    )
-
-
-elif rate >= 0.3:
-
-    print(
-        "Medium Burnout Risk"
-    )
-
+elif rate >=0.3:
+    print("Medium Burnout Risk")
 
 else:
-
-    print(
-        "Low Burnout Risk"
-    )
+    print("Low Burnout Risk")
